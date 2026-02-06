@@ -1,0 +1,549 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Be My Valentine?</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg1: #ffe3ec;
+      --bg2: #ffd6e0;
+      --card: rgba(255, 255, 255, 0.72);
+      --text: #432036;
+      --accent: #e33f7d;
+      --accent-2: #ff6ba8;
+      --yes: #ff3d8f;
+      --no: #b26a8d;
+      --shadow: 0 20px 45px rgba(131, 20, 72, 0.2);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Poppins", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 20% 15%, rgba(255,255,255,.65), transparent 34%),
+        radial-gradient(circle at 85% 80%, rgba(255,255,255,.35), transparent 30%),
+        linear-gradient(135deg, var(--bg1), var(--bg2));
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      padding: 20px;
+    }
+
+    .floating-heart {
+      position: fixed;
+      width: 14px;
+      height: 14px;
+      background: rgba(255, 84, 147, 0.35);
+      transform: rotate(45deg);
+      border-radius: 2px;
+      animation: drift linear infinite;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .floating-heart::before,
+    .floating-heart::after {
+      content: "";
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      background: inherit;
+      border-radius: 50%;
+    }
+
+    .floating-heart::before { left: -7px; }
+    .floating-heart::after { top: -7px; }
+
+    @keyframes drift {
+      from { transform: translateY(0) rotate(45deg); opacity: .8; }
+      to { transform: translateY(-120vh) rotate(45deg); opacity: 0; }
+    }
+
+    .card {
+      width: min(680px, 100%);
+      background: var(--card);
+      border: 1px solid rgba(255,255,255,.65);
+      backdrop-filter: blur(8px);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      text-align: center;
+      padding: 38px 24px 40px;
+      position: relative;
+      z-index: 2;
+      animation: cardIn .7s cubic-bezier(.21, .9, .32, 1);
+    }
+
+    @keyframes cardIn {
+      from {
+        opacity: 0;
+        transform: translateY(18px) scale(.98);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(255, 95, 158, 0.14);
+      color: #b21962;
+      font-size: .82rem;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+
+    h1 {
+      margin: 0;
+      font-family: "Playfair Display", serif;
+      font-size: clamp(2rem, 5vw, 3.3rem);
+      line-height: 1.1;
+      color: #5a1f44;
+    }
+
+    p {
+      margin: 14px auto 28px;
+      max-width: 560px;
+      font-size: clamp(.96rem, 2.2vw, 1.05rem);
+      color: rgba(67, 32, 54, 0.85);
+    }
+
+    .reason-wrap {
+      margin: -8px auto 18px;
+      padding: 10px 16px;
+      border-radius: 999px;
+      width: fit-content;
+      max-width: 100%;
+      background: rgba(255, 255, 255, 0.5);
+      border: 1px solid rgba(255, 255, 255, .7);
+      color: #6d294d;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: .92rem;
+      box-shadow: 0 10px 24px rgba(142, 42, 83, .11);
+    }
+
+    .reason-label {
+      font-weight: 600;
+      opacity: .8;
+    }
+
+    .reason-text {
+      font-weight: 600;
+      opacity: 0;
+      transform: translateY(4px);
+      transition: opacity .35s ease, transform .35s ease;
+      min-height: 20px;
+      display: inline-block;
+      color: #a61f5f;
+    }
+
+    .reason-text.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .btn-wrap {
+      position: relative;
+      min-height: 190px;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 16px;
+      margin-top: 8px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 999px;
+      padding: 14px 30px;
+      font-size: 1rem;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: transform .18s ease, box-shadow .18s ease, background .2s ease;
+    }
+
+    #yesBtn {
+      background: linear-gradient(135deg, var(--yes), var(--accent-2));
+      color: #fff;
+      box-shadow: 0 10px 22px rgba(227, 63, 125, 0.35);
+    }
+
+    #yesBtn:hover { transform: translateY(-2px) scale(1.02); }
+
+    #noBtn {
+      background: #f7d1e1;
+      color: #7a355a;
+      box-shadow: 0 8px 16px rgba(129, 49, 87, .18);
+      position: static;
+      transition: left .28s cubic-bezier(.22, .61, .36, 1), top .28s cubic-bezier(.22, .61, .36, 1), background .2s ease, box-shadow .2s ease;
+      will-change: left, top;
+      user-select: none;
+    }
+
+    #noBtn.dodging {
+      position: absolute;
+    }
+
+    .message {
+      margin-top: 22px;
+      min-height: 28px;
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: #a30d52;
+    }
+
+    .kiss {
+      position: absolute;
+      font-size: 26px;
+      animation: pop .75s ease forwards;
+      pointer-events: none;
+      z-index: 4;
+    }
+
+    @keyframes pop {
+      0% { transform: translateY(10px) scale(.5); opacity: 0; }
+      40% { opacity: 1; }
+      100% { transform: translateY(-35px) scale(1.3); opacity: 0; }
+    }
+
+    .spark {
+      position: fixed;
+      left: 50%;
+      bottom: 30px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 8;
+      animation: burst .95s cubic-bezier(.14, .89, .31, 1) forwards;
+      box-shadow: 0 0 12px currentColor;
+    }
+
+    @keyframes burst {
+      0% {
+        transform: translate(0, 0) scale(.8);
+        opacity: 1;
+      }
+      100% {
+        transform: translate(var(--dx), var(--dy)) scale(0);
+        opacity: 0;
+      }
+    }
+
+    .finale {
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(160deg, rgba(83, 6, 46, .62), rgba(172, 26, 97, .52));
+      backdrop-filter: blur(6px);
+      display: grid;
+      place-items: center;
+      padding: 22px;
+      z-index: 10;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .4s ease;
+    }
+
+    .finale.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .finale-card {
+      width: min(560px, 100%);
+      background: rgba(255, 240, 248, .96);
+      color: #5a1f44;
+      border-radius: 24px;
+      padding: 30px 24px;
+      border: 1px solid rgba(255, 255, 255, .9);
+      box-shadow: 0 24px 50px rgba(61, 12, 39, .35);
+      text-align: center;
+      transform: translateY(18px) scale(.98);
+      transition: transform .45s cubic-bezier(.19, 1, .22, 1);
+    }
+
+    .finale.show .finale-card {
+      transform: translateY(0) scale(1);
+    }
+
+    .finale-card h2 {
+      margin: 0 0 10px;
+      font-family: "Playfair Display", serif;
+      font-size: clamp(1.8rem, 4.4vw, 2.4rem);
+      color: #7f1f53;
+    }
+
+    #finalNote {
+      min-height: 78px;
+      font-size: 1.02rem;
+      line-height: 1.55;
+      margin: 0 0 18px;
+      color: #5f2b49;
+    }
+
+    #replayBtn {
+      background: linear-gradient(135deg, #ff4a9f, #ff74b5);
+      color: #fff;
+      box-shadow: 0 10px 20px rgba(196, 40, 113, .33);
+    }
+
+    #replayBtn:hover {
+      transform: translateY(-2px);
+    }
+
+    @media (max-width: 560px) {
+      .reason-wrap {
+        flex-direction: column;
+        border-radius: 16px;
+        padding: 10px 12px;
+      }
+
+      .btn-wrap {
+        min-height: 206px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <span class="badge">A tiny question for you</span>
+    <h1>Will You Be My Valentine?</h1>
+    <p>You make every ordinary moment feel magical. So... can I officially call you my Valentine? 💗</p>
+    <div class="reason-wrap" aria-live="polite">
+      <span class="reason-label">Why I adore you:</span>
+      <span class="reason-text" id="reasonText"></span>
+    </div>
+
+    <div class="btn-wrap" id="arena">
+      <button id="yesBtn" type="button">Yes 💖</button>
+      <button id="noBtn" type="button" aria-label="No">No 🙈</button>
+    </div>
+
+    <div class="message" id="msg"></div>
+  </main>
+
+  <section class="finale" id="finale" aria-live="polite">
+    <div class="finale-card">
+      <h2>Officially My Valentine 💌</h2>
+      <p id="finalNote"></p>
+      <button id="replayBtn" type="button">Replay Magic ✨</button>
+    </div>
+  </section>
+
+  <script>
+    const arena = document.getElementById('arena');
+    const noBtn = document.getElementById('noBtn');
+    const yesBtn = document.getElementById('yesBtn');
+    const msg = document.getElementById('msg');
+    const reasonText = document.getElementById('reasonText');
+    const finale = document.getElementById('finale');
+    const finalNote = document.getElementById('finalNote');
+    const replayBtn = document.getElementById('replayBtn');
+
+    let dodgeCount = 0;
+    let hasDodged = false;
+    const SAFE_GAP = 14;
+    const reasons = [
+      'You make my worst days feel lighter.',
+      'Your laugh is my favorite sound.',
+      'Every plan is better when it includes you.',
+      'You are cute, kind, and dangerously lovable.',
+      'You make ordinary moments unforgettable.'
+    ];
+    let reasonIndex = 0;
+
+    function showReason(text) {
+      reasonText.classList.remove('show');
+      setTimeout(() => {
+        reasonText.textContent = text;
+        reasonText.classList.add('show');
+      }, 130);
+    }
+
+    function clamp(value, min, max) {
+      return Math.max(min, Math.min(value, max));
+    }
+
+    function overlaps(a, b) {
+      return !(a.right <= b.left || a.left >= b.right || a.bottom <= b.top || a.top >= b.bottom);
+    }
+
+    function findSafePosition() {
+      const arenaRect = arena.getBoundingClientRect();
+      const noRect = noBtn.getBoundingClientRect();
+      const yesRect = yesBtn.getBoundingClientRect();
+
+      const maxX = Math.max(0, arenaRect.width - noRect.width);
+      const maxY = Math.max(0, arenaRect.height - noRect.height);
+
+      const blocked = {
+        left: (yesRect.left - arenaRect.left) - SAFE_GAP,
+        top: (yesRect.top - arenaRect.top) - SAFE_GAP,
+        right: (yesRect.right - arenaRect.left) + SAFE_GAP,
+        bottom: (yesRect.bottom - arenaRect.top) + SAFE_GAP
+      };
+
+      for (let i = 0; i < 60; i++) {
+        const x = Math.random() * maxX;
+        const y = Math.random() * maxY;
+        const candidate = {
+          left: x,
+          top: y,
+          right: x + noRect.width,
+          bottom: y + noRect.height
+        };
+        if (!overlaps(candidate, blocked)) return { x, y };
+      }
+
+      const corners = [
+        { x: 0, y: 0 },
+        { x: maxX, y: 0 },
+        { x: 0, y: maxY },
+        { x: maxX, y: maxY }
+      ];
+
+      for (const corner of corners) {
+        const candidate = {
+          left: corner.x,
+          top: corner.y,
+          right: corner.x + noRect.width,
+          bottom: corner.y + noRect.height
+        };
+        if (!overlaps(candidate, blocked)) return corner;
+      }
+
+      // Last fallback still clamps inside arena.
+      return { x: clamp(maxX, 0, maxX), y: clamp(maxY, 0, maxY) };
+    }
+
+    function setNoPosition() {
+      noBtn.classList.add('dodging');
+      const { x, y } = findSafePosition();
+      noBtn.style.left = `${x}px`;
+      noBtn.style.top = `${y}px`;
+    }
+
+    function placeNoBesideYes() {
+      noBtn.classList.remove('dodging');
+      noBtn.style.left = '';
+      noBtn.style.top = '';
+    }
+
+    function moveNoButton() {
+      hasDodged = true;
+      dodgeCount++;
+      if (dodgeCount === 3) msg.textContent = 'Oops... that No seems a little shy 😶';
+      if (dodgeCount === 6) msg.textContent = 'Try "Yes" maybe? It looks cute on you 😌';
+      if (dodgeCount === 10) msg.textContent = 'This is destiny-level obvious now 💘';
+
+      // Make "Yes" grow slightly over time for fun.
+      const scale = Math.min(1 + dodgeCount * 0.03, 1.38);
+      yesBtn.style.transform = `scale(${scale})`;
+      setNoPosition();
+    }
+
+    ['mouseenter', 'touchstart', 'pointerdown', 'focus'].forEach(evt => {
+      noBtn.addEventListener(evt, moveNoButton, { passive: true });
+    });
+
+    noBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      moveNoButton();
+    });
+
+    window.addEventListener('resize', () => {
+      if (hasDodged) setNoPosition();
+      else placeNoBesideYes();
+    });
+    placeNoBesideYes();
+    showReason(reasons[0]);
+    setInterval(() => {
+      reasonIndex = (reasonIndex + 1) % reasons.length;
+      showReason(reasons[reasonIndex]);
+    }, 2300);
+
+    function launchBurst() {
+      const colors = ['#ff3d8f', '#ff6da9', '#ffc1da', '#ffe4ef', '#ff89bc'];
+      for (let i = 0; i < 38; i++) {
+        const spark = document.createElement('span');
+        spark.className = 'spark';
+        spark.style.color = colors[Math.floor(Math.random() * colors.length)];
+        const angle = (Math.PI * 2 * i) / 38 + (Math.random() * .35);
+        const radius = 60 + Math.random() * 260;
+        const dx = Math.cos(angle) * radius;
+        const dy = -Math.abs(Math.sin(angle) * (130 + Math.random() * 250));
+        spark.style.setProperty('--dx', `${dx}px`);
+        spark.style.setProperty('--dy', `${dy}px`);
+        spark.style.animationDelay = `${Math.random() * 0.08}s`;
+        document.body.appendChild(spark);
+        setTimeout(() => spark.remove(), 1100);
+      }
+    }
+
+    function typeFinalNote(text) {
+      finalNote.textContent = '';
+      let i = 0;
+      const typer = setInterval(() => {
+        finalNote.textContent += text.charAt(i);
+        i++;
+        if (i >= text.length) clearInterval(typer);
+      }, 34);
+    }
+
+    yesBtn.addEventListener('click', () => {
+      msg.textContent = 'Yay! Best choice ever. Happy Valentine\'s Day, Baby! 💞';
+      yesBtn.textContent = 'You said YES! 💖';
+      noBtn.style.display = 'none';
+      launchBurst();
+
+      for (let i = 0; i < 22; i++) {
+        const s = document.createElement('span');
+        s.className = 'kiss';
+        s.textContent = Math.random() > 0.5 ? '💖' : '💕';
+        s.style.left = `${Math.random() * 100}%`;
+        s.style.top = `${40 + Math.random() * 40}%`;
+        s.style.animationDelay = `${Math.random() * 0.35}s`;
+        document.body.appendChild(s);
+        setTimeout(() => s.remove(), 850);
+      }
+
+      setTimeout(() => {
+        finale.classList.add('show');
+        typeFinalNote('You just made me the happiest person alive. I promise more smiles, more adventures, and more happiness with you. ❤️');
+      }, 520);
+    });
+
+    replayBtn.addEventListener('click', () => {
+      window.location.reload();
+    });
+
+    // Decorative floating hearts in the background.
+    for (let i = 0; i < 16; i++) {
+      const h = document.createElement('span');
+      h.className = 'floating-heart';
+      h.style.left = `${Math.random() * 100}%`;
+      h.style.bottom = `${-10 - Math.random() * 80}px`;
+      h.style.animationDuration = `${7 + Math.random() * 9}s`;
+      h.style.animationDelay = `${Math.random() * 6}s`;
+      h.style.transform = `scale(${0.7 + Math.random() * 1.15}) rotate(45deg)`;
+      document.body.appendChild(h);
+    }
+  </script>
+</body>
+</html>
